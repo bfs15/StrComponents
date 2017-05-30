@@ -13,6 +13,16 @@ int main() {
 	Path::pushLabeled(g);
 
 	/*DEBUG LOG*/clog << "\n====\n" << "Stack size " << Path::nodeQueue.size() << "\n";
+	
+	graphT = trasposed(graph);
+	
+	nodesPreOrderedL = preOrder(graphT);
+	
+	for each nodesPreOrderedL node {
+		if node not searched yet
+			componentList = search(graphT, node);
+	}
+
 
 	while(!Path::nodeQueue.empty()) {
 		Agnode_t* node = Path::nodeQueue.front();
