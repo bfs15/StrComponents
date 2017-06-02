@@ -7,6 +7,7 @@
 
 #include <queue>
 #include <map>
+#include <list>
 #include <string>
 #include <cstring>
 
@@ -14,14 +15,22 @@
 
 #define DEBUG FALSE
 
-void goUp (Agraph_t* g, Agnode_t* node);
+namespace std {
 
+list<Agnode_t*> reversePosOrder(Agraph_t* g);
 
-unsigned long long charsToInt(char* s);
+void reversePosOrder(Agraph_t* g, Agnode_t* node, list<Agnode_t*>& rpo);
 
-unsigned long long attrIntFromNode(Agnode_t* node, Agsym_t* attribute, bool& hasAttr);
+list<Agnode_t*> searchT (Agraph_t* g, Agnode_t* node);
 
+void addNodesToGraph(Agraph_t* g, list<Agnode_t*> nodes);
+
+int* state(Agnode_t*);
+
+int* stateCreate(Agnode_t*);
 
 void outAsDot(Agraph_t* g);
+
+};
 
 #endif /* MAIN_H_ */
