@@ -1,5 +1,5 @@
-#ifndef MAIN_H_
-#define MAIN_H_
+#ifndef main_H_
+#define main_H_
 
 #include <iostream>
 #include <cstdio>
@@ -13,24 +13,27 @@
 
 #include <graphviz/cgraph.h>
 
-#define DEBUG FALSE
+#define DEBUG TRUE
 
-namespace std {
+using namespace std;
+
+typedef struct {
+	Agrec_t h;
+	long long int n;
+} state;
 
 list<Agnode_t*> reversePosOrder(Agraph_t* g);
 
-void reversePosOrder(Agraph_t* g, Agnode_t* node, list<Agnode_t*>& rpo);
+// void reversePosOrderR(Agraph_t* g, Agnode_t* node, list<Agnode_t*>& rpo);
 
 list<Agnode_t*> searchT (Agraph_t* g, Agnode_t* node);
 
 void addNodesToGraph(Agraph_t* g, list<Agnode_t*> nodes);
 
-int* state(Agnode_t*);
+state* stateN(Agnode_t* node);
 
-int* stateCreate(Agnode_t*);
+state* stateNCreate(Agnode_t*);
 
 void outAsDot(Agraph_t* g);
 
-};
-
-#endif /* MAIN_H_ */
+#endif /* main_H_ */

@@ -1,30 +1,57 @@
-SRC = src/
 
-bin = fortes
-Path = Path
+SRCDIR = src
+BUILDDIR = obj
 
-OBJS = $(SRC)$(Path).o $(SRC)$(bin).o
+SRCNAMES := $(shell find $(SOURCEDIR) -name '*.cpp' -type f -exec basename {} \;)
+
+OBJECTS := $(addprefix $(BUILDDIR)/, $(SRCNAMES:%.cpp=%.o))
+SRCS := $(addprefix $(SRCDIR)/, $(SRCNAMES))
 
 LIBS = -lcgraph
 
-all: $(bin)
+WARN = -Wall -Wextra -Werror
+FLAGS = -O3 $(WARN)
+
+# Executable filename
+bin = fortes
+
+all: obj_dir list_srcnames $(bin)
+
+set_debug:
+	$(eval FLAGS = -O0 -g $(WARN))
+
+debug: set_debug all
 
 rebuild: clean all
 
+buildclean: all clean
+
+obj_dir:
+	mkdir -p $(BUILDDIR)
+
+list_srcnames:
+	@echo
+	@echo "Found source files to compile:"
+	@echo $(SRCNAMES)
+	@echo
+
 # Tool invocations
-$(bin): $(OBJS)
+$(bin): $(OBJECTS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	g++ -std=c++11 -o "$(bin)" $(OBJS) $(LIBS)
+	g++ -std=c++11 -o "$(bin)" $(OBJECTS) $(LIBS)
 	@echo 'Finished building target: $@'
-	@echo ' '
+	@echo
 
-$(SRCDIR)%.o: $(SRCDIR)%.cpp
+$(BUILDDIR)/%.o: $(SRCDIR)/%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler'
-	g++ -std=c++11 -O3 -Wall -Wextra -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
+	g++ -std=c++11 $(FLAGS) $(LIBS) -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"
 	@echo 'Finished building: $<'
-	@echo ' '
+	@echo
 
 clean:
-	rm -rf  ./$(SRC)*.o  ./$(SRC)*.d  $(bin)
+	rm -rf  ./$(BUILDDIR)/*.o  ./$(BUILDDIR)/*.d
+
+cleanAll: clean
+	rm -rf  $(bin)
