@@ -4,6 +4,8 @@ BUILDDIR = obj
 
 SRCNAMES := $(shell find $(SOURCEDIR) -name '*.cpp' -type f -exec basename {} \;)
 
+HNAMES := $(shell find $(SOURCEDIR) -name '*.h' -type f -exec basename {} \;)
+
 OBJECTS := $(addprefix $(BUILDDIR)/, $(SRCNAMES:%.cpp=%.o))
 SRCS := $(addprefix $(SRCDIR)/, $(SRCNAMES))
 
@@ -33,6 +35,8 @@ list_srcnames:
 	@echo
 	@echo "Found source files to compile:"
 	@echo $(SRCNAMES)
+	@echo "Found header files:"
+	@echo $(HNAMES)
 	@echo
 
 # Tool invocations
@@ -43,7 +47,7 @@ $(bin): $(OBJECTS)
 	@echo 'Finished building target: $@'
 	@echo
 
-$(BUILDDIR)/%.o: $(SRCDIR)/%.cpp
+$(BUILDDIR)/%.o: $(SRCDIR)/%.cpp $(SRCDIR)/%.h
 	@echo 'Building file: $<'
 	@echo 'Invoking: GCC C++ Compiler'
 	g++ -std=c++11 $(FLAGS) $(LIBS) -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" -o "$@" "$<"

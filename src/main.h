@@ -13,14 +13,16 @@
 
 #include <graphviz/cgraph.h>
 
-#define DEBUG TRUE
+#define DEBUG FALSE
 
 using namespace std;
 
+enum state { posOrder1, posOrder2, searchT1, searchT2 };
+
 typedef struct {
 	Agrec_t h;
-	long long int n;
-} state;
+	state stateN;
+} nodeData;
 
 list<Agnode_t*> reversePosOrder(Agraph_t* g);
 
@@ -30,9 +32,9 @@ list<Agnode_t*> searchT (Agraph_t* g, Agnode_t* node);
 
 void addNodesToGraph(Agraph_t* g, list<Agnode_t*> nodes);
 
-state* stateN(Agnode_t* node);
+nodeData* nodeDataGet(Agnode_t* node);
 
-state* stateNCreate(Agnode_t*);
+nodeData* nodeDataCreate(Agnode_t*);
 
 void outAsDot(Agraph_t* g);
 
