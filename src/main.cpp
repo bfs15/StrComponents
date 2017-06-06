@@ -1,3 +1,4 @@
+
 #include "main.h"
 
 using namespace std;
@@ -32,6 +33,8 @@ int main() {
 
 	// outAsDot(g);
 	agwrite(g, stdout);
+	
+	agclose(g);
 
 	return 0;
 }
