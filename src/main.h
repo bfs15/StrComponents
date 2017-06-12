@@ -26,7 +26,7 @@ typedef struct {
 
 list<Agnode_t*> reversePosOrder(Agraph_t* g);
 
-// void reversePosOrderR(Agraph_t* g, Agnode_t* node, list<Agnode_t*>& rpo);
+void reversePosOrderR(Agraph_t* g, Agnode_t* node, list<Agnode_t*>& rpo);
 
 list<Agnode_t*> searchT (Agraph_t* g, Agnode_t* node);
 
@@ -35,7 +35,5 @@ void addNodesToGraph(Agraph_t* g, list<Agnode_t*> nodes);
 nodeData* nodeDataGet(Agnode_t* node);
 
 nodeData* nodeDataCreate(Agnode_t*);
-
-void outAsDot(Agraph_t* g);
 
 #endif /* main_H_ */

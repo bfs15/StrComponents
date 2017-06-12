@@ -31,13 +31,33 @@ int main() {
 		}
 	}
 
-	// outAsDot(g);
 	agwrite(g, stdout);
-	
+
 	agclose(g);
 
 	return 0;
 }
+
+
+list<Agnode_t*> reversePosOrder(Agraph_t* g) {
+	// list with Reverse Pos Order
+	list<Agnode_t*> rpo;
+
+	// for each graph node
+	Agnode_t* node;
+	for (node = agfstnode(g); node; node = agnxtnode(g,node)){
+		// if not processed yet
+		if (nodeDataGet(node) == NULL) {
+			/**/if(DEBUG)clog<<"++++++++++ Order call on node "<< agnameof(node) << endl;
+			// orders every son of it (+itself)
+			reversePosOrderR(g, node, rpo);
+			/**/if(DEBUG)clog<<"---------- Order call finished on node "<< agnameof(node) << endl;
+		}
+	}
+
+	return rpo;
+}
+
 
 void reversePosOrderR(Agraph_t* g, Agnode_t* node, list<Agnode_t*>& rpo) {
 	/**/if(DEBUG)clog<<"<><><> OrderR call node: " << agnameof(node) << endl;
@@ -59,25 +79,6 @@ void reversePosOrderR(Agraph_t* g, Agnode_t* node, list<Agnode_t*>& rpo) {
 	/**/if(DEBUG)clog<<">>> Pushed on rpo node " << agnameof(node) << endl;
 	nodeD->stateN = posOrder2;
 	/**/if(DEBUG)clog<<"state set to " << nodeDataGet(node)->stateN  <<endl;
-}
-
-list<Agnode_t*> reversePosOrder(Agraph_t* g) {
-	// list with Reverse Pos Order
-	list<Agnode_t*> rpo;
-
-	// for each graph node
-	Agnode_t* node;
-	for (node = agfstnode(g); node; node = agnxtnode(g,node)){
-		// if not processed yet
-		if (nodeDataGet(node) == NULL) {
-			/**/if(DEBUG)clog<<"++++++++++ Order call on node "<< agnameof(node) << endl;
-			// orders every son of it (+itself)
-			reversePosOrderR(g, node, rpo);
-			/**/if(DEBUG)clog<<"---------- Order call finished on node "<< agnameof(node) << endl;
-		}
-	}
-
-	return rpo;
 }
 
 /**
@@ -121,14 +122,6 @@ list<Agnode_t*> searchT (Agraph_t* g, Agnode_t* node) {
 	return nodeList;
 }
 
-nodeData* nodeDataCreate(Agnode_t* node) {
-	/**/if(DEBUG)clog<<"+*+*+ created state of node "<< agnameof(node) << endl;
-	return (nodeData*)agbindrec(node, (char*)"nodeData", sizeof(nodeData), FALSE);
-}
-
-nodeData* nodeDataGet(Agnode_t* node) {
-	return (nodeData*)aggetrec(node, (char*)"nodeData", FALSE);
-}
 
 void addNodesToGraph(Agraph_t* g, list<Agnode_t*> nodes) {
 	/**/if(DEBUG)clog<<"Adding nodes"<< endl;
@@ -137,4 +130,15 @@ void addNodesToGraph(Agraph_t* g, list<Agnode_t*> nodes) {
 		agsubnode(g, node, TRUE);
 	}
 	/**/if(DEBUG)clog<< endl;
+}
+
+
+nodeData* nodeDataGet(Agnode_t* node) {
+	return (nodeData*)aggetrec(node, (char*)"nodeData", FALSE);
+}
+
+
+nodeData* nodeDataCreate(Agnode_t* node) {
+	/**/if(DEBUG)clog<<"+*+*+ created state of node "<< agnameof(node) << endl;
+	return (nodeData*)agbindrec(node, (char*)"nodeData", sizeof(nodeData), FALSE);
 }
