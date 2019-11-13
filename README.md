@@ -1,56 +1,79 @@
-# PathCounter
-
-Trabalho de Implementação 2
+# Graph Strong Component getter
 
 CI065 / CI755 - Algoritmos e Teoria dos Grafos
 
+Trabalho de Implementação 3
+
 Bruno Freitas Serbena GRR20151343
-Michel Melo de Souza GRR20159342
 
-O algoritmo criado pelo grupo funciona da seguinte maneira:
+The algorithm works the following way:
 
-Existe uma classe chamada Path.
+	strongComponents(G) {
+		List<node> topoOrder = reversePosOrder(G)
 
-Objetos Path armazenam o valor de atributos.
+		// by searching the ancestors of nodes on topological order
+		// each search won't go farther than the sc component of the node searched
+		// because on any given search, the nodes on it's source sc components
+		// will already be found (they came first on the topological order)
+		// and since it searches ancestors, it won't go to decendant sc comps.
+		for each topoOrder node {
+			if (node not found yet){
+				component = searchTransposed(node)
+				// finds all ancestors and itself
 
-A classe possui uma fila de nodos (estática);
-
-O algoritmo percorre os nodos do grafo pegando todos que tem atributo (sumidouros), coloca eles em uma fila de nodos "Q";
-
-	Enquanto a fila não for vazia =>
-		Retira o primeiro nodo dela, "X";
-		Itera os pais de X =>
-			Chama "Vai para cima" nesse pai, "P" {
-				Caso esse pai já tenha sido processado {
-					retorna; ou seja "vai para cima" no proximo P;
-				} Do contrário {
-					Um Path é criado em P; ou seja é marcado como processado;
-					Para calcular path de P:
-					Itera todos os filhos de P, "F" =>
-					(um deles será X, que já foi processado)
-						Chama P.path."Processo de Soma"(F) {
-							Se F foi processado {
-								adiciona path de F em path que chamou;
-							} Senão {
-								F é marcado como processado;
-								Itera nos filhos de F =>
-									Chama F.path."Processo de Soma" em filhos de F para calcular path de F;
-									(loop recursivo)
-								Se nodo filho possuir algum outro pai que não o pai que chamou a função {
-									F é adicionado a fila de nodos;
-								}
-								adiciona path de F em path que chamou;
-							}
-						}
-					loop;
-				}
-				chama "Vai para cima" nos pais desse pai;
+				// these found nodes will be a component
+				addComponent(G, component)
 			}
-		loop;
-	loop;
+		}
+	}
 
-	Imprime o resultado =>
-		Para cada nodo:
-			Setta o valor de seus atributos de maneira a eles ficarem iguais ao do seu path;
-			Imprime seu nome e os atributos que tem valor maior que 0;
-			Imprime as arestas que saem do nodo;
+
+	reversePosOrder(G) {
+		List<node> rpo
+
+		for each G node {
+			if (node not ordered) {
+				reversePosOrderR(G, node, rpo)
+			}
+		}
+
+		return rpo
+	}
+
+
+	reversePosOrderR(G, node, rpo) {
+		node.state = seen
+
+		for each node son {
+			if (son.state == NULL)
+				reversePosOrderR(G, son, rpo)
+		}
+
+		node.state = ordered
+		rpo.push_front(node)
+	}
+
+
+	searchTransposed(G, node) {
+		// list of nodes found in seach
+		list<Agnode_t*> nodeList;
+		// bfs queue
+		queue<Agnode_t*> queue;
+
+		node.state = found;
+		nodeList.push_back(node);
+		queue.push(node);
+
+		while (!queue.empty()) {
+			node = queue.pop();
+
+			for each node parent {
+				if (parent.state not found) {
+					parent.state = found;
+					nodeList.push_back(parent);
+					queue.push(parent);
+				}
+			}
+		}
+		return nodeList;
+	}
