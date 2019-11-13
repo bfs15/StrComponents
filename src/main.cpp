@@ -4,6 +4,13 @@
 using namespace std;
 
 int main() {
+	// For each node in topological order (most parent first){
+	//		Get all the nodes ancestors (n-order parents) and itself.
+	//		But only if they havent been found yet in this loop.
+	// 		These nodes are a component,
+	// 		since you can reach them (they are your parents), 
+	//  	and they can reach you since you came first on topological order.
+	// }
 	// By searching the ancestors of nodes on topological order,
 	// each search won't go farther than the sc component of the node searched,
 	// because on any given search the nodes on it's source sc components
@@ -23,7 +30,7 @@ int main() {
 
 	list<Agnode_t*> componentNodes;
 	
-	// For each topoOrder node
+	// for each node in topoOrder {
 	Agraph_t* subG;
 	for (Agnode_t*& node : topoOrder) {
 		// if not searched yet
