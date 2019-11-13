@@ -45,7 +45,8 @@ reversePosOrder(G) {
 reversePosOrderR(G, node, rpo) {
 	node.state = seen
 
-	for each node son {
+	for each node son { // outgoing edges
+		// if not seen/ordered
 		if (son.state == NULL)
 			reversePosOrderR(G, son, rpo)
 	}
@@ -69,13 +70,14 @@ searchTransposed(G, node) {
 		node = queue.pop();
 
 		for each node parent {
-			if (parent.state not found) {
+			if (parent.state == ordered) {
 				parent.state = found;
 				nodeList.push_back(parent);
 				// search this guy's parents also
 				queue.push(parent);
 			}
 		}
+		parent.state = searched;
 	}
 	return nodeList;
 }

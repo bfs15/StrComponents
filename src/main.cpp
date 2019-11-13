@@ -70,14 +70,15 @@ list<Agnode_t*> reversePosOrder(Agraph_t* g) {
 void reversePosOrderR(Agraph_t* g, Agnode_t* node, list<Agnode_t*>& rpo) {
 	/**/if(DEBUG)clog<<"<><><> OrderR call node: " << agnameof(node) << endl;
 	nodeData* nodeD = nodeDataCreate(node);
-
+	// node.state = seen
 	nodeD->stateN = posOrder1;
 	/**/if(DEBUG)clog<<"state set to "<< nodeDataGet(node)->stateN  <<endl;
 
-	// for all sons
+	// for each node son { // outgoing edges
 	Agedge_t *edge;
 	for (edge = agfstout(g, node); edge; edge = agnxtout(g, edge)) {
 		/**/if(DEBUG)clog<< agnameof(node) <<" --> checking son "<< agnameof(edge->node) << endl;
+		// if not seen/ordered
 		if (nodeDataGet(edge->node) == NULL) {
 			reversePosOrderR(g, edge->node, rpo);
 		}
@@ -85,6 +86,7 @@ void reversePosOrderR(Agraph_t* g, Agnode_t* node, list<Agnode_t*>& rpo) {
 
 	rpo.push_front(node);
 	/**/if(DEBUG)clog<<">>> Pushed on rpo node " << agnameof(node) << endl;
+	// node.state = ordered
 	nodeD->stateN = posOrder2;
 	/**/if(DEBUG)clog<<"state set to " << nodeDataGet(node)->stateN  <<endl;
 }
@@ -115,7 +117,7 @@ list<Agnode_t*> searchT (Agraph_t* g, Agnode_t* node) {
 		for (inEdge = agfstin(g, node); inEdge; inEdge = agnxtin(g, inEdge)) {
 			/**/if(DEBUG)clog<<"state of node "<< agnameof(node) <<" = "<< nodeDataGet(inEdge->node)->stateN << endl;
 
-			// if (parent.state not found)
+			// if (parent.state == ordered) { // not seen by search
 			if (nodeDataGet(inEdge->node)->stateN == posOrder2) {
 				/**/if(DEBUG)clog<< agnameof(node) << " found node " << agnameof(inEdge->node) << endl;
 				// parent.state = found;
